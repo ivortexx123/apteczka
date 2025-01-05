@@ -176,3 +176,4 @@ if lek_do_edytowania:
 
 print("Po edycją:")
 print(lek1)
+"jakakowilek zmiana"
