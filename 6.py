@@ -51,13 +51,34 @@ class Lek:
                 f"Termin ważności: {self.termin_waznosci}\n"
                 f"Notatka: {self.notatka}\n")
 
+class LekPrzyjmowany:
+    def __init__(self, lek, dawka, dzien):
+        self.lek = lek
+        self.dawka = dawka
+        self.dzien = dzien
+
+    def __str__(self):
+        return f"{self.lek.nazwa} - Dawka: {self.dawka} - Dzień: {self.dzien}"
+
 class Uzytkownik:
     def __init__(self, imie, wiek, jednostki_chorobowe, uczulenia, leki_przyjmowane):
         self.imie = imie
         self.wiek = wiek
         self.jednostki_chorobowe = jednostki_chorobowe
         self.uczulenia = uczulenia
-        self.leki_przyjmowane = leki_przyjmowane
+        # Sprawdzanie, czy leki przyjmowane są zgodne z klasą LekPrzyjmowany
+        self.leki_przyjmowane = []
+        for lek_przyjmowany in leki_przyjmowane:
+            if isinstance(lek_przyjmowany, LekPrzyjmowany):
+                self.leki_przyjmowane.append(lek_przyjmowany)
+            else:
+                raise ValueError("Każdy element leki_przyjmowane musi być instancją klasy LekPrzyjmowany")
+
+    def dodaj_lek_przyjmowany(self, lek_przyjmowany):
+        if isinstance(lek_przyjmowany, LekPrzyjmowany):
+            self.leki_przyjmowane.append(lek_przyjmowany)
+        else:
+            raise ValueError("Dodawany lek musi być instancją klasy LekPrzyjmowany")
 
     def edytuj(self, imie=None, wiek=None, jednostki_chorobowe=None, uczulenia=None, leki_przyjmowane=None):
         if imie is not None:
@@ -69,14 +90,18 @@ class Uzytkownik:
         if uczulenia is not None:
             self.uczulenia = uczulenia
         if leki_przyjmowane is not None:
-            self.leki_przyjmowane = leki_przyjmowane
+            for lek_przyjmowany in leki_przyjmowane:
+                if isinstance(lek_przyjmowany, LekPrzyjmowany):
+                    self.leki_przyjmowane = leki_przyjmowane
+                else:
+                    raise ValueError("Każdy element leki_przyjmowane musi być instancją klasy LekPrzyjmowany")
 
     def __str__(self):
         return (f"Użytkownik: {self.imie}\n"
                 f"Wiek: {self.wiek}\n"
                 f"Jednostki chorobowe: {', '.join(self.jednostki_chorobowe)}\n"
                 f"Uczulenia: {', '.join(self.uczulenia)}\n"
-                f"Leki przyjmowane: {', '.join([f'{lek_przyjmowany['lek']} - Dawka: {lek_przyjmowany['dawka']} - Dzień: {lek_przyjmowany['dzien']}' for lek_przyjmowany in self.leki_przyjmowane])}\n")
+                f"Leki przyjmowane: {', '.join([str(lek_przyjmowany) for lek_przyjmowany in self.leki_przyjmowane])}\n")
 
 class Apteczka:
     def __init__(self):
@@ -163,6 +188,11 @@ apteczka = Apteczka()
 lek1 = Lek("Paracetamol", "XYZ Pharma", ["gorączka", "ból"], ["mama", "tata"], ["paracetamol"], 12, 10, 8, "31-12-2024", "na gorączkę")
 lek2 = Lek("Ibuprofen", "ABC Pharma", ["ból", "zapal"], ["tata"], ["ibuprofen"], 12, 20, 20, "30-06-2025", "na ból")
 
+
+uzytkownik1 = Uzytkownik("mama", 35, ["nadciśnienie"], ["paracetamol"], [{"lek": "Paracetamol", "dawka": "1 tabletka", "dzien": "poniedziałek"}])
+uzytkownik2 = Uzytkownik("tata", 40, ["cholesterol"], ["ibuprofen"], [{"lek": "Ibuprofen", "dawka": "1 tabletka", "dzien": "wtorek"}])
+
+
 apteczka.dodaj_lek(lek1)
 apteczka.dodaj_lek(lek2)
 
@@ -176,6 +206,3 @@ if lek_do_edytowania:
 
 print("Po edycją:")
 print(lek1)
-"jakakowilek zmiana"
-
-"nastepna zmiana"
