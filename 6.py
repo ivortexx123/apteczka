@@ -2,7 +2,22 @@ import csv
 from datetime import datetime
 
 class Lek:
-    def __init__(self, nazwa, producent, jednostki_chorobowe, dla_kogo, substancje_czynne, zalecany_wiek, liczba_dawek, liczba_dostepnych_dawek, termin_waznosci, notatka):
+    def __init__(self, nazwa, producent, jednostki_chorobowe, dla_kogo, substancje_czynne, zalecany_wiek, liczba_dawek,
+                 liczba_dostepnych_dawek, termin_waznosci, notatka):
+        if (not isinstance(nazwa, str) or
+            not isinstance(producent, str) or
+            not isinstance(jednostki_chorobowe, list) or
+            not isinstance(dla_kogo, list) or
+            not isinstance(substancje_czynne, list) or
+            not isinstance(zalecany_wiek, int) or not isinstance(liczba_dawek, int) or
+            not isinstance(liczba_dostepnych_dawek, int) or
+            not isinstance(notatka, str)):
+            raise ValueError("Podane zmienne muszą być w odpowiednich formatach")
+        try:
+            datetime.strptime(termin_waznosci, '%d-%m-%Y')
+        except ValueError:
+            raise ValueError("Termin ważności musi być w formacie dd-mm-YYYY")
+
         self.nazwa = nazwa
         self.producent = producent
         self.jednostki_chorobowe = jednostki_chorobowe
@@ -17,7 +32,32 @@ class Lek:
     def jest_przeterminowany(self):
         return datetime.strptime(self.termin_waznosci, '%d-%m-%Y') < datetime.now()
 
-    def edytuj(self, nazwa=None, producent=None, jednostki_chorobowe=None, dla_kogo=None, substancje_czynne=None, zalecany_wiek=None, liczba_dawek=None, liczba_dostepnych_dawek=None, termin_waznosci=None, notatka=None):
+    def edytuj(self, nazwa=None, producent=None, jednostki_chorobowe=None, dla_kogo=None, substancje_czynne=None,
+               zalecany_wiek=None, liczba_dawek=None, liczba_dostepnych_dawek=None, termin_waznosci=None, notatka=None):
+        if nazwa is not None and not isinstance(nazwa, str):
+            raise ValueError("Nazwa musi być ciągiem znaków")
+        if producent is not None and not isinstance(producent, str):
+            raise ValueError("Producent musi być ciągiem znaków")
+        if jednostki_chorobowe is not None and not isinstance(jednostki_chorobowe, list):
+            raise ValueError("Jednostki chorobowe muszą być listą")
+        if dla_kogo is not None and not isinstance(dla_kogo, list):
+            raise ValueError("Dla kogo musi być listą")
+        if substancje_czynne is not None and not isinstance(substancje_czynne, list):
+            raise ValueError("Substancje czynne muszą być listą")
+        if zalecany_wiek is not None and not isinstance(zalecany_wiek, int):
+            raise ValueError("Zalecany wiek musi być liczbą całkowitą")
+        if liczba_dawek is not None and not isinstance(liczba_dawek, int):
+            raise ValueError("Liczba dawek musi być liczbą całkowitą")
+        if liczba_dostepnych_dawek is not None and not isinstance(liczba_dostepnych_dawek, int):
+            raise ValueError("Liczba dostępnych dawek musi być liczbą całkowitą")
+        if termin_waznosci is not None:
+            try:
+                datetime.strptime(termin_waznosci, '%d-%m-%Y')
+            except ValueError:
+                raise ValueError("Termin ważności musi być w formacie dd-mm-YYYY")
+        if notatka is not None and not isinstance(notatka, str):
+            raise ValueError("Notatka musi być ciągiem znaków")
+
         if nazwa is not None:
             self.nazwa = nazwa
         if producent is not None:
@@ -50,6 +90,7 @@ class Lek:
                 f"Liczba dostępnych dawek: {self.liczba_dostepnych_dawek}\n"
                 f"Termin ważności: {self.termin_waznosci}\n"
                 f"Notatka: {self.notatka}\n")
+
 
 class LekPrzyjmowany:
     def __init__(self, lek, dawka, dzien):
