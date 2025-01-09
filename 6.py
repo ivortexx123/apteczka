@@ -1,18 +1,22 @@
 import csv
 from datetime import datetime
 
+
 class Lek:
     def __init__(self, nazwa, producent, jednostki_chorobowe, dla_kogo, substancje_czynne, zalecany_wiek, liczba_dawek,
                  liczba_dostepnych_dawek, termin_waznosci, notatka):
         if (not isinstance(nazwa, str) or
-            not isinstance(producent, str) or
-            not isinstance(jednostki_chorobowe, list) or
-            not isinstance(dla_kogo, list) or
-            not isinstance(substancje_czynne, list) or
-            not isinstance(zalecany_wiek, int) or not isinstance(liczba_dawek, int) or
-            not isinstance(liczba_dostepnych_dawek, int) or
-            not isinstance(notatka, str)):
-            raise ValueError("Podane zmienne muszą być w odpowiednich formatach")
+                not isinstance(producent, str) or
+                not isinstance(notatka, str)):
+            raise ValueError("Zmienne: nazwa, producent, notatka  muszą być ciągami znaków")
+        if (not isinstance(jednostki_chorobowe, list) or
+                not isinstance(dla_kogo, list) or
+                not isinstance(substancje_czynne, list)):
+            raise ValueError("Zmienne: jednostki_chorobowe, dla_kogo, substancje_czynne  muszą być listami")
+        if (not isinstance(zalecany_wiek, int) or
+                not isinstance(liczba_dawek, int) or
+                not isinstance(liczba_dostepnych_dawek, int)):
+            raise ValueError("Zmienne: zalecany_wiek, liczba_dawek, liczba_dostepnych_dawek  muszą być liczbami")
         try:
             datetime.strptime(termin_waznosci, '%d-%m-%Y')
         except ValueError:
@@ -226,6 +230,20 @@ class Apteczka:
 
         return True, "Lek bezpieczny dla użytkownika"
 
+    def wez_dawke(self, nazwa_leku):
+        if not isinstance(nazwa_leku, str):
+            raise ValueError("Nazwa leku musi być ciągiem znaków")
+        lek = self.znajdz_lek(nazwa_leku)
+        if lek:
+            if lek.liczba_dostepnych_dawek > 0:
+                lek.liczba_dostepnych_dawek -= 1
+                print(
+                    f"Pobrano jedną dawkę leku: {lek.nazwa}. Pozostało dostępnych dawek: {lek.liczba_dostepnych_dawek}")
+            else:
+                print(f"Brak dostępnych dawek leku: {lek.nazwa}")
+        else:
+            print(f"Lek o nazwie {nazwa_leku} nie został znaleziony w apteczce.")
+
     def wczytaj_baze(self, plik):
         with open(plik, newline='') as csvfile:
             reader = csv.DictReader(csvfile, delimiter=';')
@@ -267,29 +285,45 @@ class Apteczka:
         else:
             print("Brak przeterminowanych leków.")
 
-    def harmonogram_przyjmowania(self):
+    def harmonogram_przyjmowania(self, imie_uzytkownika):
+        imie_uzytkownika = imie_uzytkownika.strip()  # usuwa białe znaki na początku i końcu
         for uzytkownik in self.uzytkownicy:
-            print(f"\nHarmonogram przyjmowania leków dla {uzytkownik.imie}:")
-            for lek_przyjmowany in uzytkownik.leki_przyjmowane:
-                print(f"{lek_przyjmowany.lek.nazwa} - Dawka: {lek_przyjmowany.dawka} - Dzień: {lek_przyjmowany.dzien}")
+            if uzytkownik.imie.lower() == imie_uzytkownika.lower():  # porównuje w wersji małych liter
+                print(f"\nHarmonogram przyjmowania leków dla {uzytkownik.imie}:")
+                for lek_przyjmowany in uzytkownik.leki_przyjmowane:
+                    print(
+                        f"{lek_przyjmowany.lek.nazwa} - Dawka: {lek_przyjmowany.dawka} - Dzień: {lek_przyjmowany.dzien}")
+                return
+        print(f"Użytkownik o imieniu {imie_uzytkownika} nie został znaleziony.")
 
 
 def main_menu():
     apteczka = Apteczka()
 
+    mama = Uzytkownik("Mama", 35, [], [], [])
+    tata = Uzytkownik("Tata", 40, [], [], [])
+    dziecko = Uzytkownik("Dziecko", 8, [], [], [])
+
+    apteczka.dodaj_uzytkownika(mama)
+    apteczka.dodaj_uzytkownika(tata)
+    apteczka.dodaj_uzytkownika(dziecko)
+
     while True:
+        apteczka.przypomnij_przeterminowane()
+
         print("\nMenu główne:")
         print("1. Dodaj lek")
         print("2. Usuń lek")
         print("3. Dodaj użytkownika")
         print("4. Usuń użytkownika")
         print("5. Sprawdź bezpieczeństwo leku")
-        print("6. Wyświetl harmonogram przyjmowania leków")
-        print("7. Wczytaj bazę danych z pliku")
-        print("8. Zapisz bazę danych do pliku")
-        print("9. Wyjście")
+        print("6. Weź dawkę leku")
+        print("7. Wyświetl harmonogram przyjmowania leków")
+        print("8. Wczytaj bazę danych z pliku")
+        print("9. Zapisz bazę danych do pliku")
+        print("10. Wyjście")
 
-        wybor = input("Wybierz opcję (1-9): ")
+        wybor = input("Wybierz opcję (1-10): ")
 
         if wybor == "1":
             dodaj_lek(apteczka)
@@ -302,18 +336,25 @@ def main_menu():
         elif wybor == "5":
             sprawdz_bezpieczenstwo(apteczka)
         elif wybor == "6":
-            apteczka.harmonogram_przyjmowania()
+            wez_dawke(apteczka)
         elif wybor == "7":
+            harmonogram_przyjmowania_uzytkownika(apteczka)
+        elif wybor == "8":
             plik = input("Podaj nazwę pliku do wczytania: ")
             apteczka.wczytaj_baze(plik)
-        elif wybor == "8":
+        elif wybor == "9":
             plik = input("Podaj nazwę pliku do zapisania: ")
             apteczka.zapisz_baze(plik)
-        elif wybor == "9":
-            print("Do widzenia!")
+        elif wybor == "10":
+            print("Program konczy działanie")
             break
         else:
             print("Nieprawidłowy wybór. Spróbuj ponownie.")
+
+
+def wez_dawke(apteczka):
+    nazwa_leku = input("Podaj nazwę leku, z którego chcesz pobrać dawkę: ")
+    apteczka.wez_dawke(nazwa_leku)
 
 
 def dodaj_lek(apteczka):
@@ -370,6 +411,11 @@ def usun_uzytkownika(apteczka):
     apteczka.usun_uzytkownika(imie)
 
 
+def harmonogram_przyjmowania_uzytkownika(apteczka):
+    imie_uzytkownika = input("Podaj imię użytkownika, dla którego chcesz wyświetlić harmonogram przyjmowania leków: ")
+    apteczka.harmonogram_przyjmowania(imie_uzytkownika)
+
+
 def sprawdz_bezpieczenstwo(apteczka):
     nazwa_leku = input("Podaj nazwę leku: ")
     imie_uzytkownika = input("Podaj imię użytkownika: ")
@@ -393,4 +439,5 @@ def sprawdz_bezpieczenstwo(apteczka):
 
 if __name__ == "__main__":
     main_menu()
+
 
