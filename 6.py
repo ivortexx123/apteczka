@@ -3,8 +3,27 @@ from datetime import datetime
 
 
 class Lek:
+    """
+    Klasa reprezentująca lek.
+
+    Atrybuty:
+        nazwa (str): Nazwa leku.
+        producent (str): Producent leku.
+        jednostki_chorobowe (list): Lista jednostek chorobowych, na które lek jest przeznaczony.
+        dla_kogo (list): Lista osób, dla których lek jest przeznaczony.
+        substancje_czynne (list): Lista substancji czynnych w leku.
+        zalecany_wiek (int): Zalecany wiek użytkownika leku.
+        liczba_dawek (int): Liczba dawek leku.
+        liczba_dostepnych_dawek (int): Liczba dostępnych dawek leku.
+        termin_waznosci (str): Termin ważności leku w formacie dd-mm-YYYY.
+        notatka (str): Dodatkowa notatka dotycząca leku.
+    """
+
     def __init__(self, nazwa, producent, jednostki_chorobowe, dla_kogo, substancje_czynne, zalecany_wiek, liczba_dawek,
                  liczba_dostepnych_dawek, termin_waznosci, notatka):
+        """
+        Inicjalizuje obiekt klasy Lek.
+        """
         if (not isinstance(nazwa, str) or
                 not isinstance(producent, str) or
                 not isinstance(notatka, str)):
@@ -34,10 +53,33 @@ class Lek:
         self.notatka = notatka
 
     def jest_przeterminowany(self):
+        """
+        Sprawdza, czy lek jest przeterminowany.
+
+        Returns:
+            bool: True, jeśli lek jest przeterminowany, w przeciwnym razie False.
+        """
         return datetime.strptime(self.termin_waznosci, '%d-%m-%Y') < datetime.now()
 
     def edytuj(self, nazwa=None, producent=None, jednostki_chorobowe=None, dla_kogo=None, substancje_czynne=None,
                zalecany_wiek=None, liczba_dawek=None, liczba_dostepnych_dawek=None, termin_waznosci=None, notatka=None):
+
+        """
+        Edytuje właściwości leku.
+
+        Args:
+            nazwa (str, opcjonalnie): Nowa nazwa leku.
+            producent (str, opcjonalnie): Nowy producent leku.
+            jednostki_chorobowe (list, opcjonalnie): Nowa lista jednostek chorobowych.
+            dla_kogo (list, opcjonalnie): Nowa lista osób, dla których lek jest przeznaczony.
+            substancje_czynne (list, opcjonalnie): Nowa lista substancji czynnych.
+            zalecany_wiek (int, opcjonalnie): Nowy zalecany wiek użytkownika leku.
+            liczba_dawek (int, opcjonalnie): Nowa liczba dawek leku.
+            liczba_dostepnych_dawek (int, opcjonalnie): Nowa liczba dostępnych dawek leku.
+            termin_waznosci (str, opcjonalnie): Nowy termin ważności leku w formacie dd-mm-YYYY.
+            notatka (str, opcjonalnie): Nowa notatka dotycząca leku.
+        """
+
         if nazwa is not None and not isinstance(nazwa, str):
             raise ValueError("Nazwa musi być ciągiem znaków")
         if producent is not None and not isinstance(producent, str):
@@ -84,6 +126,12 @@ class Lek:
             self.notatka = notatka
 
     def __str__(self):
+        """
+        Reprezentacja tekstowa obiektu klasy Lek.
+
+        Returns:
+            str: Tekstowa reprezentacja obiektu Lek.
+        """
         return (f"Lek: {self.nazwa}\n"
                 f"Producent: {self.producent}\n"
                 f"Jednostki chorobowe: {', '.join(self.jednostki_chorobowe)}\n"
@@ -97,7 +145,24 @@ class Lek:
 
 
 class LekPrzyjmowany:
+    """
+    Klasa reprezentująca lek przyjmowany przez użytkownika.
+
+    Atrybuty:
+        lek (Lek): Obiekt leku przyjmowanego przez użytkownika.
+        dawka (str): Dawka leku.
+        dzien (str): Dzień tygodnia przyjmowania leku.
+    """
+
     def __init__(self, lek, dawka, dzien):
+        """
+        Inicjalizuje obiekt klasy LekPrzyjmowany.
+
+        Args:
+            lek (Lek): Obiekt leku.
+            dawka (str): Dawka leku.
+            dzien (str): Dzień przyjmowania leku.
+        """
         if not isinstance(lek, Lek):
             raise ValueError("Lek musi być instancją klasy Lek")
         if not isinstance(dawka, str):
@@ -110,11 +175,31 @@ class LekPrzyjmowany:
         self.dzien = dzien
 
     def __str__(self):
+        """
+        Reprezentacja tekstowa obiektu klasy LekPrzyjmowany.
+
+        Returns:
+            str: Tekstowa reprezentacja obiektu LekPrzyjmowany.
+        """
         return f"{self.lek.nazwa} - Dawka: {self.dawka} - Dzień: {self.dzien}"
 
 
 class Uzytkownik:
+    """
+    Klasa reprezentująca użytkownika apteczki.
+
+    Atrybuty:
+        imie (str): Imię użytkownika.
+        wiek (int): Wiek użytkownika.
+        jednostki_chorobowe (list): Lista jednostek chorobowych użytkownika.
+        uczulenia (list): Lista uczuleń użytkownika.
+        leki_przyjmowane (list): Lista leków przyjmowanych przez użytkownika.
+    """
+
     def __init__(self, imie, wiek, jednostki_chorobowe, uczulenia, leki_przyjmowane):
+        """
+        Inicjalizuje obiekt klasy Uzytkownik.
+        """
         if not isinstance(imie, str):
             raise ValueError("Imię musi być ciągiem znaków")
         if not isinstance(wiek, int):
@@ -130,9 +215,10 @@ class Uzytkownik:
         self.wiek = wiek
         self.jednostki_chorobowe = jednostki_chorobowe
         self.uczulenia = uczulenia
-
-        # Sprawdzanie, czy leki przyjmowane są zgodne z klasą LekPrzyjmowany
         self.leki_przyjmowane = []
+        """
+        Sprawdza, czy leki przyjmowane są zgodne z klasą LekPrzyjmowany
+        """
         for lek_przyjmowany in leki_przyjmowane:
             if isinstance(lek_przyjmowany, LekPrzyjmowany):
                 self.leki_przyjmowane.append(lek_przyjmowany)
@@ -140,12 +226,28 @@ class Uzytkownik:
                 raise ValueError("Każdy element leki_przyjmowane musi być instancją klasy LekPrzyjmowany")
 
     def dodaj_lek_przyjmowany(self, lek_przyjmowany):
+        """
+        Dodaje lek przyjmowany do listy leków przyjmowanych.
+
+        Args:
+            lek_przyjmowany (LekPrzyjmowany): Obiekt leku przyjmowanego.
+        """
         if isinstance(lek_przyjmowany, LekPrzyjmowany):
             self.leki_przyjmowane.append(lek_przyjmowany)
         else:
             raise ValueError("Dodawany lek musi być instancją klasy LekPrzyjmowany")
 
     def edytuj(self, imie=None, wiek=None, jednostki_chorobowe=None, uczulenia=None, leki_przyjmowane=None):
+        """
+          Edytuje atrybuty użytkownika.
+
+          Args:
+              imie (str, opcjonalnie): Nowe imię użytkownika.
+              wiek (int, opcjonalnie): Nowy wiek użytkownika.
+              jednostki_chorobowe (list, opcjonalnie): Nowa lista jednostek chorobowych użytkownika.
+              uczulenia (list, opcjonalnie): Nowa lista uczuleń użytkownika.
+              leki_przyjmowane (list, opcjonalnie): Nowa lista leków przyjmowanych przez użytkownika.
+          """
         if imie is not None and not isinstance(imie, str):
             raise ValueError("Imię musi być ciągiem znaków")
         if wiek is not None and not isinstance(wiek, int):
@@ -170,6 +272,12 @@ class Uzytkownik:
             self.uczulenia = uczulenia
 
     def __str__(self):
+        """
+        Reprezentacja tekstowa obiektu klasy Uzytkownik.
+
+        Returns:
+            str: Tekstowa reprezentacja obiektu Uzytkownik.
+        """
         return (f"Użytkownik: {self.imie}\n"
                 f"Wiek: {self.wiek}\n"
                 f"Jednostki chorobowe: {', '.join(self.jednostki_chorobowe)}\n"
@@ -178,16 +286,39 @@ class Uzytkownik:
 
 
 class Apteczka:
+    """
+    Klasa reprezentująca apteczkę, która przechowuje leki i użytkowników.
+
+    Atrybuty:
+        leki (list): Lista leków w apteczce.
+        uzytkownicy (list): Lista użytkowników apteczki.
+    """
+
     def __init__(self):
+        """
+        Inicjalizuje obiekt klasy: Apteczka.
+        """
         self.leki = []
         self.uzytkownicy = []
 
     def dodaj_lek(self, lek):
+        """
+        Dodaje lek do apteczki.
+
+        Args:
+            lek (Lek): Obiekt leku do dodania.
+        """
         if not isinstance(lek, Lek):
             raise ValueError("Dodawany lek musi być instancją klasy Lek")
         self.leki.append(lek)
 
     def usun_lek(self, nazwa_leku):
+        """
+        Usuwa lek o podanej nazwie z apteczki.
+
+        Args:
+            nazwa_leku (str): Nazwa leku do usunięcia.
+        """
         if not isinstance(nazwa_leku, str):
             raise ValueError("Nazwa leku musi być ciągiem znaków")
         poczatkowa_dlugosc = len(self.leki)
@@ -196,6 +327,15 @@ class Apteczka:
             print(f"Leku o nazwie {nazwa_leku} nie znaleziono. Nic nie usunięto.")
 
     def znajdz_lek(self, nazwa_leku):
+        """
+        Znajduje lek o podanej nazwie w apteczce.
+
+        Args:
+            nazwa_leku (str): Nazwa leku do znalezienia.
+
+        Returns:
+            Lek: Obiekt leku o podanej nazwie lub None, jeśli nie znaleziono.
+        """
         if not isinstance(nazwa_leku, str):
             raise ValueError("Nazwa leku musi być ciągiem znaków")
         for lek in self.leki:
@@ -204,11 +344,23 @@ class Apteczka:
         return None
 
     def dodaj_uzytkownika(self, uzytkownik):
+        """
+        Dodaje użytkownika do apteczki.
+
+        Args:
+            uzytkownik (Uzytkownik): Obiekt użytkownika do dodania.
+        """
         if not isinstance(uzytkownik, Uzytkownik):
             raise ValueError("Dodawany użytkownik musi być instancją klasy Uzytkownik")
         self.uzytkownicy.append(uzytkownik)
 
     def usun_uzytkownika(self, imie):
+        """
+        Usuwa użytkownika o podanym imieniu z apteczki.
+
+        Args:
+            imie (str): Imię użytkownika do usunięcia.
+        """
         if not isinstance(imie, str):
             raise ValueError("Imię użytkownika musi być ciągiem znaków")
         poczatkowa_dlugosc = len(self.uzytkownicy)
@@ -217,6 +369,16 @@ class Apteczka:
             print(f"Użytkownika o imieniu {imie} nie znaleziono. Nic nie usunięto.")
 
     def sprawdz_bezpieczenstwo(self, lek, uzytkownik):
+        """
+        Sprawdza bezpieczeństwo leku dla danego użytkownika.
+
+        Args:
+            lek (Lek): Obiekt leku do sprawdzenia.
+            uzytkownik (Uzytkownik): Obiekt użytkownika do sprawdzenia.
+
+        Returns:
+            tuple: (bool, str) - True, jeśli lek jest bezpieczny, False w przeciwnym razie, oraz powód.
+        """
         if not isinstance(lek, Lek):
             raise ValueError("Lek musi być instancją klasy Lek")
         if not isinstance(uzytkownik, Uzytkownik):
@@ -231,6 +393,12 @@ class Apteczka:
         return True, "Lek bezpieczny dla użytkownika"
 
     def wez_dawke(self, nazwa_leku):
+        """
+        Pobiera jedną dawkę leku o podanej nazwie.
+
+        Args:
+            nazwa_leku (str): Nazwa leku, z którego chcesz pobrać dawkę.
+        """
         if not isinstance(nazwa_leku, str):
             raise ValueError("Nazwa leku musi być ciągiem znaków")
         lek = self.znajdz_lek(nazwa_leku)
@@ -245,38 +413,71 @@ class Apteczka:
             print(f"Lek o nazwie {nazwa_leku} nie został znaleziony w apteczce.")
 
     def wczytaj_baze(self, plik):
-        with open(plik, newline='') as csvfile:
+        """
+        Wczytuje bazę danych z pliku CSV.
+
+        Args:
+            plik (str): Nazwa pliku CSV do wczytania.
+        """
+        with open(plik, newline='', encoding='utf-8') as csvfile:
             reader = csv.DictReader(csvfile, delimiter=';')
             for row in reader:
                 lek = Lek(
-                    row['nazwa'], row['producent'], row['jednostki_chorobowe'].split(';'),
-                    row['dla_kogo'].split(';'), row['substancje_czynne'].split(';'),
-                    int(row['zalecany_wiek']), int(row['liczba_dawek']),
-                    int(row['liczba_dostepnych_dawek']), row['termin_waznosci'], row['notatka']
+                    row['nazwa'], row['producent'], row['jednostki chorobowe'].split(';'),
+                    row['dla kogo'].split(';'), row['substancje czynne'].split(';'),
+                    int(row['zalecany wiek']), int(row['liczba dawek']),
+                    int(row['liczba dostępnych dawek']), row['termin waznosci'], row['notatka']
                 )
                 self.dodaj_lek(lek)
 
     def zapisz_baze(self, plik):
-        with open(plik, 'w', newline='') as csvfile:
-            fieldnames = ['nazwa', 'producent', 'jednostki_chorobowe', 'dla_kogo', 'substancje_czynne',
-                          'zalecany_wiek', 'liczba_dawek', 'liczba_dostepnych_dawek', 'termin_waznosci', 'notatka']
+        """
+        Zapisuje bazę danych do pliku CSV.
+
+        Args:
+            plik (str): Nazwa pliku CSV do zapisania.
+        """
+        with open(plik, 'w', newline='', encoding='utf-8') as csvfile:
+            fieldnames = ['nazwa', 'producent', 'jednostki chorobowe', 'dla kogo', 'substancje czynne', 'zalecany wiek',
+                          'liczba dawek', 'liczba dostępnych dawek', 'termin waznosci', 'notatka']
             writer = csv.DictWriter(csvfile, fieldnames=fieldnames, delimiter=';')
             writer.writeheader()
             for lek in self.leki:
                 writer.writerow({
                     'nazwa': lek.nazwa,
                     'producent': lek.producent,
-                    'jednostki_chorobowe': ';'.join(lek.jednostki_chorobowe),
-                    'dla_kogo': ';'.join(lek.dla_kogo),
-                    'substancje_czynne': ';'.join(lek.substancje_czynne),
-                    'zalecany_wiek': lek.zalecany_wiek,
-                    'liczba_dawek': lek.liczba_dawek,
-                    'liczba_dostepnych_dawek': lek.liczba_dostepnych_dawek,
-                    'termin_waznosci': lek.termin_waznosci,
+                    'jednostki chorobowe': ';'.join(lek.jednostki_chorobowe),
+                    'dla kogo': ';'.join(lek.dla_kogo),
+                    'substancje czynne': ';'.join(lek.substancje_czynne),
+                    'zalecany wiek': lek.zalecany_wiek,
+                    'liczba dawek': lek.liczba_dawek,
+                    'liczba dostępnych dawek': lek.liczba_dostepnych_dawek,
+                    'termin waznosci': lek.termin_waznosci,
                     'notatka': lek.notatka
                 })
 
+    def wyswietl_zawartosc(self):
+        """
+        Wyświetla zawartość apteczki, w tym wszystkie leki i użytkowników.
+        """
+        if not self.leki and not self.uzytkownicy:
+            print("Apteczka jest pusta.")
+            return
+
+        if self.leki:
+            print("\nLeki w apteczce:")
+            for lek in self.leki:
+                print(lek)
+
+        if self.uzytkownicy:
+            print("\nUżytkownicy apteczki:")
+            for uzytkownik in self.uzytkownicy:
+                print(uzytkownik)
+
     def przypomnij_przeterminowane(self):
+        """
+        Przypomina o przeterminowanych lekach w apteczce.
+        """
         przeterminowane = [lek for lek in self.leki if lek.jest_przeterminowany()]
         if przeterminowane:
             print("Przeterminowane leki:")
@@ -286,20 +487,60 @@ class Apteczka:
             print("Brak przeterminowanych leków.")
 
     def harmonogram_przyjmowania(self, imie_uzytkownika):
-        imie_uzytkownika = imie_uzytkownika.strip()  # usuwa białe znaki na początku i końcu
+        """
+        Wyświetla i zwraca harmonogram przyjmowania leków dla danego użytkownika.
+
+        Args:
+            imie_uzytkownika (str): Imię użytkownika, dla którego chcesz wyświetlić harmonogram.
+
+        Returns:
+            str: Harmonogram przyjmowania leków użytkownika.
+        """
+        imie_uzytkownika = imie_uzytkownika.strip()
         for uzytkownik in self.uzytkownicy:
-            if uzytkownik.imie.lower() == imie_uzytkownika.lower():  # porównuje w wersji małych liter
-                print(f"\nHarmonogram przyjmowania leków dla {uzytkownik.imie}:")
+            if uzytkownik.imie.lower() == imie_uzytkownika.lower():
+                harmonogram = f"\nHarmonogram przyjmowania leków dla {uzytkownik.imie}:\n"
                 for lek_przyjmowany in uzytkownik.leki_przyjmowane:
-                    print(
-                        f"{lek_przyjmowany.lek.nazwa} - Dawka: {lek_przyjmowany.dawka} - Dzień: {lek_przyjmowany.dzien}")
-                return
+                    harmonogram += f"{lek_przyjmowany.lek.nazwa} - Dawka: {lek_przyjmowany.dawka} - Dzień: {lek_przyjmowany.dzien}\n"
+                print(harmonogram)
+                return harmonogram.strip()
         print(f"Użytkownik o imieniu {imie_uzytkownika} nie został znaleziony.")
+        return ""
+
+    def edytuj_lek(self, nazwa_leku, **kwargs):
+        """
+        Edytuje atrybuty leku o podanej nazwie.
+
+        Args:
+            nazwa_leku (str): Nazwa leku do edycji.
+            kwargs: Nowe wartości atrybutów leku.
+        """
+        lek = self.znajdz_lek(nazwa_leku)
+        if lek:
+            lek.edytuj(**kwargs)
+            print(f"Lek {nazwa_leku} został zaktualizowany.")
+        else:
+            print(f"Lek o nazwie {nazwa_leku} nie został znaleziony w apteczce.")
+
+    def edytuj_uzytkownika(self, imie, **kwargs):
+        """
+        Edytuje atrybuty użytkownika o podanym imieniu.
+
+        Args:
+            imie (str): Imię użytkownika do edycji.
+            kwargs: Nowe wartości atrybutów użytkownika.
+        """
+        for uzytkownik in self.uzytkownicy:
+            if uzytkownik.imie == imie:
+                if isinstance(uzytkownik, Uzytkownik):
+                    uzytkownik.edytuj(**kwargs)
+                print(f"Użytkownik {uzytkownik.imie} został zaktualizowany.")
+                return
+        print(f"Użytkownik o imieniu {imie} nie został znaleziony.")
 
 
 def main_menu():
     apteczka = Apteczka()
-
     mama = Uzytkownik("Mama", 35, [], [], [])
     tata = Uzytkownik("Tata", 40, [], [], [])
     dziecko = Uzytkownik("Dziecko", 8, [], [], [])
@@ -307,8 +548,33 @@ def main_menu():
     apteczka.dodaj_uzytkownika(mama)
     apteczka.dodaj_uzytkownika(tata)
     apteczka.dodaj_uzytkownika(dziecko)
-
+    """
+    Utworzenie oraz dodanie do apteczki wymaganych użytkowników o pustych danych.
+    """
     while True:
+        """
+        Główne menu interfejsu użytkownika apteczki.
+        Pozwala na zarządzanie lekami i użytkownikami oraz wykonuje inne operacje na apteczce.
+
+        Początkowo przeszukuje apteczkę w poszukiwaniu przeterminoawnych leków.
+
+        Wybór opcji z menu:
+        1. Dodaj lek - pozwala dodać nowy lek do apteczki.
+        2. Usuń lek - pozwala usunąć istniejący lek z apteczki.
+        3. Dodaj użytkownika - pozwala dodać nowego użytkownika do apteczki.
+        4. Usuń użytkownika - pozwala usunąć istniejącego użytkownika z apteczki.
+        5. Sprawdź bezpieczeństwo leku - sprawdza, czy dany lek jest bezpieczny dla użytkownika.
+        6. Weź dawkę leku - pobiera dawkę leku z apteczki.
+        7. Wyświetl harmonogram przyjmowania leków - wyświetla harmonogram przyjmowania leków dla użytkownika.
+        8. Wczytaj bazę danych z pliku - wczytuje bazę danych leków z pliku CSV.
+        9. Zapisz bazę danych do pliku - zapisuje bazę danych leków do pliku CSV.
+        10. Wyświetl zawartość apteczki - wyświetla wszystkie leki i użytkowników przechowywanych w apteczce.
+        11. Edytuj lek - edytuje atrybuty leku w apteczce.
+        12. Edytuj użytkownika - edytuje atrybuty użytkownika, w tym leki przyjmowane przez użytkownika.
+        13. Wyjście - kończy działanie programu.
+
+        Główne menu działa w pętli, dopóki użytkownik nie wybierze opcji wyjścia.
+        """
         apteczka.przypomnij_przeterminowane()
 
         print("\nMenu główne:")
@@ -321,9 +587,12 @@ def main_menu():
         print("7. Wyświetl harmonogram przyjmowania leków")
         print("8. Wczytaj bazę danych z pliku")
         print("9. Zapisz bazę danych do pliku")
-        print("10. Wyjście")
+        print("10. Wyświetl zawartość apteczki")
+        print("11. Edytuj lek")
+        print("12. Edytuj użytkownika")
+        print("13. Wyjście")
 
-        wybor = input("Wybierz opcję (1-10): ")
+        wybor = input("Wybierz opcję (1-13): ")
 
         if wybor == "1":
             dodaj_lek(apteczka)
@@ -346,6 +615,12 @@ def main_menu():
             plik = input("Podaj nazwę pliku do zapisania: ")
             apteczka.zapisz_baze(plik)
         elif wybor == "10":
+            apteczka.wyswietl_zawartosc()
+        elif wybor == "11":
+            edytuj_lek(apteczka)
+        elif wybor == "12":
+            edytuj_uzytkownika(apteczka)
+        elif wybor == "13":
             print("Program konczy działanie")
             break
         else:
@@ -353,11 +628,23 @@ def main_menu():
 
 
 def wez_dawke(apteczka):
+    """
+    Pobiera dawkę leku na podstawie nazwy leku wprowadzonej przez użytkownika.
+
+    Args:
+        apteczka (Apteczka): Obiekt apteczki zawierający leki.
+    """
     nazwa_leku = input("Podaj nazwę leku, z którego chcesz pobrać dawkę: ")
     apteczka.wez_dawke(nazwa_leku)
 
 
 def dodaj_lek(apteczka):
+    """
+    Dodaje nowy lek do apteczki na podstawie informacji wprowadzonych przez użytkownika.
+
+    Args:
+        apteczka (Apteczka): Obiekt apteczki, do której dodawany jest lek.
+    """
     nazwa = input("Podaj nazwę leku: ")
     producent = input("Podaj producenta: ")
     jednostki_chorobowe = input("Podaj jednostki chorobowe (oddzielone średnikiem): ").split(';')
@@ -376,11 +663,23 @@ def dodaj_lek(apteczka):
 
 
 def usun_lek(apteczka):
+    """
+    Usuwa lek z apteczki na podstawie nazwy leku wprowadzonej przez użytkownika.
+
+    Args:
+        apteczka (Apteczka): Obiekt apteczki zawierający leki.
+    """
     nazwa = input("Podaj nazwę leku do usunięcia: ")
     apteczka.usun_lek(nazwa)
 
 
 def dodaj_uzytkownika(apteczka):
+    """
+    Dodaje nowego użytkownika do apteczki na podstawie informacji wprowadzonych przez użytkownika.
+
+    Args:
+        apteczka (Apteczka): Obiekt apteczki, do której dodawany jest użytkownik.
+    """
     imie = input("Podaj imię użytkownika: ")
     wiek = int(input("Podaj wiek użytkownika: "))
     jednostki_chorobowe = input("Podaj jednostki chorobowe (oddzielone średnikiem): ").split(';')
@@ -407,16 +706,34 @@ def dodaj_uzytkownika(apteczka):
 
 
 def usun_uzytkownika(apteczka):
+    """
+    Usuwa użytkownika z apteczki na podstawie imienia użytkownika wprowadzonego przez użytkownika.
+
+    Args:
+        apteczka (Apteczka): Obiekt apteczki zawierający użytkowników.
+    """
     imie = input("Podaj imię użytkownika do usunięcia: ")
     apteczka.usun_uzytkownika(imie)
 
 
 def harmonogram_przyjmowania_uzytkownika(apteczka):
+    """
+    Wyświetla harmonogram przyjmowania leków dla danego użytkownika na podstawie imienia wprowadzonego przez użytkownika.
+
+    Args:
+        apteczka (Apteczka): Obiekt apteczki zawierający użytkowników.
+    """
     imie_uzytkownika = input("Podaj imię użytkownika, dla którego chcesz wyświetlić harmonogram przyjmowania leków: ")
     apteczka.harmonogram_przyjmowania(imie_uzytkownika)
 
 
 def sprawdz_bezpieczenstwo(apteczka):
+    """
+    Sprawdza bezpieczeństwo leku dla danego użytkownika na podstawie nazw leku i użytkownika wprowadzonych przez użytkownika.
+
+    Args:
+        apteczka (Apteczka): Obiekt apteczki zawierający leki i użytkowników.
+    """
     nazwa_leku = input("Podaj nazwę leku: ")
     imie_uzytkownika = input("Podaj imię użytkownika: ")
 
@@ -437,7 +754,108 @@ def sprawdz_bezpieczenstwo(apteczka):
         print("Nie znaleziono leku lub użytkownika.")
 
 
+def edytuj_lek(apteczka):
+    """
+        Edytuje atrybuty leku o podanej nazwie w apteczce.
+
+        Args:
+            apteczka (Apteczka): Obiekt apteczki, w której przechowywany jest lek.
+        """
+    nazwa_leku = input("Podaj nazwę leku do edycji: ")
+    nowa_nazwa = input("Podaj nową nazwę leku (pozostaw puste, aby nie zmieniać): ")
+    nowy_producent = input("Podaj nowego producenta (pozostaw puste, aby nie zmieniać): ")
+    nowe_jednostki_chorobowe = input(
+        "Podaj nowe jednostki chorobowe (oddzielone średnikiem, pozostaw puste, aby nie zmieniać): ")
+    nowy_dla_kogo = input(
+        "Podaj nowe osoby, dla których lek jest przeznaczony (oddzielone średnikiem, pozostaw puste, aby nie zmieniać): ")
+    nowe_substancje_czynne = input(
+        "Podaj nowe substancje czynne (oddzielone średnikiem, pozostaw puste, aby nie zmieniać): ")
+    nowy_zalecany_wiek = input("Podaj nowy zalecany wiek (pozostaw puste, aby nie zmieniać): ")
+    nowa_liczba_dawek = input("Podaj nową liczbę dawek (pozostaw puste, aby nie zmieniać): ")
+    nowa_liczba_dostepnych_dawek = input("Podaj nową liczbę dostępnych dawek (pozostaw puste, aby nie zmieniać): ")
+    nowy_termin_waznosci = input("Podaj nowy termin ważności (dd-mm-YYYY, pozostaw puste, aby nie zmieniać): ")
+    nowa_notatka = input("Podaj nową notatkę (pozostaw puste, aby nie zmieniać): ")
+
+    apteczka.edytuj_lek(nazwa_leku,
+                        nazwa=nowa_nazwa or None,
+                        producent=nowy_producent or None,
+                        jednostki_chorobowe=nowe_jednostki_chorobowe.split(';') if nowe_jednostki_chorobowe else None,
+                        dla_kogo=nowy_dla_kogo.split(';') if nowy_dla_kogo else None,
+                        substancje_czynne=nowe_substancje_czynne.split(';') if nowe_substancje_czynne else None,
+                        zalecany_wiek=int(nowy_zalecany_wiek) if nowy_zalecany_wiek else None,
+                        liczba_dawek=int(nowa_liczba_dawek) if nowa_liczba_dawek else None,
+                        liczba_dostepnych_dawek=int(
+                            nowa_liczba_dostepnych_dawek) if nowa_liczba_dostepnych_dawek else None,
+                        termin_waznosci=nowy_termin_waznosci or None,
+                        notatka=nowa_notatka or None)
+
+
+def edytuj_uzytkownika(apteczka):
+    """
+    Edytuje atrybuty użytkownika o podanym imieniu w apteczce, w tym możliwość dodawania i usuwania leków przyjmowanych.
+
+    Args:
+        apteczka (Apteczka): Obiekt apteczki, w której przechowywany jest użytkownik.
+    """
+    imie_uzytkownika = input("Podaj imię użytkownika do edycji: ")
+    nowy_wiek = input("Podaj nowy wiek (pozostaw puste, aby nie zmieniać): ")
+    nowe_jednostki_chorobowe = input(
+        "Podaj nowe jednostki chorobowe (oddzielone średnikiem, pozostaw puste, aby nie zmieniać): ")
+    nowe_uczulenia = input("Podaj nowe uczulenia (oddzielone średnikiem, pozostaw puste, aby nie zmieniać): ")
+
+    leki_przyjmowane = []
+
+    if input("Czy chcesz edytować leki przyjmowane? (tak/nie): ").lower() == 'tak':
+        while True:
+            akcja = input(
+                "Podaj 'dodaj', aby dodać nowy lek przyjmowany, lub 'usuń', aby usunąć lek przyjmowany: ").lower()
+            if akcja == 'dodaj':
+                nazwa_leku = input("Podaj nazwę leku: ")
+                lek = apteczka.znajdz_lek(nazwa_leku)
+                if lek:
+                    dawka = input("Podaj dawkę: ")
+                    dzien = input("Podaj dzień: ")
+                    lek_przyjmowany = LekPrzyjmowany(lek, dawka, dzien)
+                    leki_przyjmowane.append(lek_przyjmowany)
+                else:
+                    print("Lek nie został znaleziony w apteczce.")
+            elif akcja == 'usuń':
+                nazwa_leku = input("Podaj nazwę leku do usunięcia: ")
+                uzytkownik = None
+                for user in apteczka.uzytkownicy:
+                    if user.imie == imie_uzytkownika:
+                        uzytkownik = user
+                        break
+                if uzytkownik:
+                    uzytkownik.leki_przyjmowane = [lek for lek in uzytkownik.leki_przyjmowane if
+                                                   lek.lek.nazwa != nazwa_leku]
+                    print(
+                        f"Lek {nazwa_leku} został usunięty z leków przyjmowanych przez użytkownika {imie_uzytkownika}.")
+                else:
+                    print(f"Użytkownik {imie_uzytkownika} nie został znaleziony.")
+            else:
+                print("Nieprawidłowa akcja. Spróbuj ponownie.")
+
+            if input("Czy chcesz kontynuować edycję leków przyjmowanych? (tak/nie): ").lower() != 'tak':
+                break
+
+    kwargs = {}
+    if nowy_wiek:
+        kwargs['wiek'] = int(nowy_wiek)
+    if nowe_jednostki_chorobowe:
+        kwargs['jednostki_chorobowe'] = nowe_jednostki_chorobowe.split(';')
+    if nowe_uczulenia:
+        kwargs['uczulenia'] = nowe_uczulenia.split(';')
+    if leki_przyjmowane:
+        kwargs['leki_przyjmowane'] = leki_przyjmowane
+
+    apteczka.edytuj_uzytkownika(imie_uzytkownika, **kwargs)
+
+
 if __name__ == "__main__":
+    """
+    Wywołuje działanie interface
+    """
     main_menu()
 
 
