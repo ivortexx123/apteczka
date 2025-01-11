@@ -17,7 +17,7 @@ def test_lek_init():
 def test_lek_jest_przeterminowany():
     lek = Lek("Paracetamol", "XYZ Pharma", ["gorączka", "ból"], ["mama", "tata"], ["paracetamol"], 12, 10, 8, "31-12-2025", "na gorączkę")
     assert not lek.jest_przeterminowany()
-    lek_przeterminowany = Lek("Ibuprofen", "ABC Pharma", ["ból"], ["tata"], ["ibuprofen"], 12, 20, 20, "01-01-2020", "na ból")
+    lek_przeterminowany = Lek("Ibuprofen", "ABC Pharma", ["ból"], ["tata"], ["ibuprofen"], 12, 20, 20, "01-01-2021", "na ból")
     assert lek_przeterminowany.jest_przeterminowany()
 
 def test_lek_edytuj():

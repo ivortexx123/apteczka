@@ -1,5 +1,7 @@
 from kod import Apteczka, LekPrzyjmowany, Lek, Uzytkownik
 import pytest
+
+
 def test_utworzenie_uzytkownika():
     jednostki_chorobowe = ["nadciśnienie"]
     uczulenia = ["paracetamol"]

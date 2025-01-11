@@ -848,6 +848,7 @@ def edytuj_uzytkownika(apteczka):
     apteczka.edytuj_uzytkownika(imie_uzytkownika, **kwargs)
 
 
+
 if __name__ == "__main__":
     """
     Wywołuje działanie interface

@@ -2,6 +2,7 @@ import os
 import csv
 from kod import Apteczka, Lek
 
+
 def test_zapisz_baze(tmpdir):
     """
     Testuje funkcję zapisz_baze, zapisując dane do pliku CSV.
