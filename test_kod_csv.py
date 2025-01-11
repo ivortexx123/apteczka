@@ -7,7 +7,7 @@ def test_zapisz_baze(tmpdir):
     Testuje funkcję zapisz_baze, zapisując dane do pliku CSV.
     """
     apteczka = Apteczka()
-    lek = Lek("Paracetamol", "XYZ Pharma", ["gorączka"], ["dorosły"], ["paracetamol"], 12, 20, 20, "31-12-2025", "na gorączkę")
+    lek = Lek("Paracetamol", "XYZ Pharma", ["gorączka"], ["mama"], ["paracetamol"], 12, 20, 20, "31-12-2025", "na gorączkę")
     apteczka.dodaj_lek(lek)
 
     tmpfile = os.path.join(tmpdir, "apteczka.csv")
@@ -23,7 +23,7 @@ def test_zapisz_baze(tmpdir):
         assert row['nazwa'] == "Paracetamol"
         assert row['producent'] == "XYZ Pharma"
         assert row['jednostki chorobowe'] == "gorączka"
-        assert row['dla kogo'] == "dorosły"
+        assert row['dla kogo'] == "mama"
         assert row['substancje czynne'] == "paracetamol"
         assert row['zalecany wiek'] == "12"
         assert row['liczba dawek'] == "20"

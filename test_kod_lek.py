@@ -77,7 +77,7 @@ def test_lek_edytuj_format_errors():
         assert str(e) == "Nazwa musi być ciągiem znaków"
 
     try:
-        lek.edytuj(producent=456)
+        lek.edytuj(producent=123)
     except ValueError as e:
         assert str(e) == "Producent musi być ciągiem znaków"
 

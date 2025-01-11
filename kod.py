@@ -764,12 +764,9 @@ def edytuj_lek(apteczka):
     nazwa_leku = input("Podaj nazwę leku do edycji: ")
     nowa_nazwa = input("Podaj nową nazwę leku (pozostaw puste, aby nie zmieniać): ")
     nowy_producent = input("Podaj nowego producenta (pozostaw puste, aby nie zmieniać): ")
-    nowe_jednostki_chorobowe = input(
-        "Podaj nowe jednostki chorobowe (oddzielone średnikiem, pozostaw puste, aby nie zmieniać): ")
-    nowy_dla_kogo = input(
-        "Podaj nowe osoby, dla których lek jest przeznaczony (oddzielone średnikiem, pozostaw puste, aby nie zmieniać): ")
-    nowe_substancje_czynne = input(
-        "Podaj nowe substancje czynne (oddzielone średnikiem, pozostaw puste, aby nie zmieniać): ")
+    nowe_jednostki_chorobowe = input("Podaj nowe jednostki chorobowe (oddzielone średnikiem, pozostaw puste, aby nie zmieniać): ")
+    nowy_dla_kogo = input("Podaj nowe osoby, dla których lek jest przeznaczony (oddzielone średnikiem, pozostaw puste, aby nie zmieniać): ")
+    nowe_substancje_czynne = input("Podaj nowe substancje czynne (oddzielone średnikiem, pozostaw puste, aby nie zmieniać): ")
     nowy_zalecany_wiek = input("Podaj nowy zalecany wiek (pozostaw puste, aby nie zmieniać): ")
     nowa_liczba_dawek = input("Podaj nową liczbę dawek (pozostaw puste, aby nie zmieniać): ")
     nowa_liczba_dostepnych_dawek = input("Podaj nową liczbę dostępnych dawek (pozostaw puste, aby nie zmieniać): ")
@@ -784,8 +781,7 @@ def edytuj_lek(apteczka):
                         substancje_czynne=nowe_substancje_czynne.split(';') if nowe_substancje_czynne else None,
                         zalecany_wiek=int(nowy_zalecany_wiek) if nowy_zalecany_wiek else None,
                         liczba_dawek=int(nowa_liczba_dawek) if nowa_liczba_dawek else None,
-                        liczba_dostepnych_dawek=int(
-                            nowa_liczba_dostepnych_dawek) if nowa_liczba_dostepnych_dawek else None,
+                        liczba_dostepnych_dawek=int(nowa_liczba_dostepnych_dawek) if nowa_liczba_dostepnych_dawek else None,
                         termin_waznosci=nowy_termin_waznosci or None,
                         notatka=nowa_notatka or None)
 

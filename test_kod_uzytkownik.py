@@ -70,6 +70,6 @@ def test_bledne_edytowanie_uzytkownika():
     uzytkownik = Uzytkownik("mama", 35, jednostki_chorobowe, uczulenia, leki_przyjmowane)
 
     try:
-        uzytkownik.edytuj(jednostki_chorobowe="nadciśnienie")  # Powinno być listą
+        uzytkownik.edytuj(jednostki_chorobowe="nadciśnienie")  #Powinno być listą
     except ValueError as e:
         assert str(e) == "Jednostki chorobowe muszą być listą"

@@ -15,6 +15,7 @@ def test_utworzenie_uzytkownika():
 
 
 def test_dodaj_lek():
+    #Test dodawania leku
     apteczka = Apteczka()
     lek = Lek("Paracetamol", "XYZ Pharma", ["gorączka"], ["dorosły"], ["paracetamol"], 12, 20, 20, "31-12-2025",
               "na gorączkę")
@@ -26,6 +27,7 @@ def test_dodaj_lek():
 
 
 def test_usun_lek():
+    #Test usuwania leku
     apteczka = Apteczka()
     lek = Lek("Paracetamol", "XYZ Pharma", ["gorączka"], ["dorosły"], ["paracetamol"], 12, 20, 20, "31-12-2025",
               "na gorączkę")
@@ -37,6 +39,7 @@ def test_usun_lek():
 
 
 def test_znajdz_lek():
+    #Test znajdowania leku
     apteczka = Apteczka()
     lek = Lek("Paracetamol", "XYZ Pharma", ["gorączka"], ["dorosły"], ["paracetamol"], 12, 20, 20, "31-12-2025",
               "na gorączkę")
@@ -48,6 +51,7 @@ def test_znajdz_lek():
 
 
 def test_sprawdz_bezpieczenstwo():
+    # Test bezpieczeństwa
     apteczka = Apteczka()
     lek = Lek("Paracetamol", "XYZ Pharma", ["gorączka"], ["dorosły"], ["paracetamol"], 12, 20, 20, "31-12-2025",
               "na gorączkę")
